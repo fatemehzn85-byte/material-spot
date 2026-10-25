@@ -124,5 +124,28 @@
   این قابلیت روی رایانه/دسکتاپ فعال نیست. ابعاد نمایش‌داده‌شده با اندازه واقعی محصول مطابقت دارد.
 </p>
 
+<!-- AR Android: اول WebXR (داخل Chrome)، اگر نشد همان لینک Scene Viewer. فقط روی اندروید فعال می‌شود؛ آیفون دست‌نخورده است. -->
+<script>
+(function(){
+  var mv = document.querySelector('model-viewer');
+  var btn = document.querySelector('.ar-android');
+  if (!mv || !btn || !/Android/i.test(navigator.userAgent)) return;
+  mv.setAttribute('ar', '');
+  mv.setAttribute('ar-modes', 'webxr');
+  var xr = false;
+  if (navigator.xr && navigator.xr.isSessionSupported) {
+    navigator.xr.isSessionSupported('immersive-ar')
+      .then(function(ok){ xr = ok; })
+      .catch(function(){});
+  }
+  btn.addEventListener('click', function(e){
+    if (xr && mv.canActivateAR) {
+      e.preventDefault();
+      try { mv.activateAR(); } catch (err) { location.href = btn.getAttribute('href'); }
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
